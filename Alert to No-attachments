@@ -1,0 +1,20 @@
+Option Explicit
+
+Private Sub Application_ItemSend(ByVal Item As Object, Cancel As Boolean)
+
+    Dim strMsg As String
+    
+    If InStr(Item.Subject & Item.Body, "添付") > 0 And Item.Attachments.Count = 0 Then
+     
+     strMsg = "このメッセージには添付書類がありません" & vbCrLf & "添付書類なしで送信しますか"
+     
+        If MsgBox(strMsg, vbExclamation + vbYesNo, "No Attachment") = vbNo Then
+        
+        Cancel = True
+        Exit Sub
+        
+        End If
+     
+    End If
+
+End Sub
