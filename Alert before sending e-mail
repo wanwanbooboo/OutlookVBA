@@ -1,0 +1,46 @@
+Private Sub Application_ItemSend(ByVal Item As Object, Cancel As Boolean)
+
+
+    Dim mailTo As String
+    Dim mailCc As String
+    Dim alertMsg As String
+    
+    mailTo = Item.To
+    mailCc = Item.CC
+    
+    mailTo = Replace(mailTo, ";", vbCrLf)
+    mailCc = Replace(mailCc, ";", vbCrLf)
+
+    alertMsg = "件名: " & Item.Subject & vbCrLf & vbCrLf & _
+    "To: " & mailTo & vbCrLf & _
+    "Cc: " & mailCc & vbCrLf & _
+    vbCrLf & "上記宛先へメールを送信してもよろしいですか？"
+
+
+    If MsgBox(alertMsg, vbYesNo + vbExclamation + vbDefaultButton2) <> vbYes Then
+        Cancel = True
+    End If
+
+
+    Dim strMsg As String
+    Dim tempu As Integer
+    Dim teisyutsu As Integer
+    
+    tempu = InStr(Item.Subject & Item.Body, "添付")
+    teisyutsu = InStr(Item.Subject & Item.Body, "提出")
+    
+    If tempu + teisyutsu > 0 And Item.Attachments.Count = 0 Then
+     
+        strMsg = "このメッセージには添付書類がありません" & vbCrLf & "添付書類なしで送信しますか"
+     
+        If MsgBox(strMsg, vbExclamation + vbYesNo, "No Attachment") = vbNo Then
+        
+            Cancel = True
+            Exit Sub
+        
+        End If
+     
+    End If
+
+End Sub
+
